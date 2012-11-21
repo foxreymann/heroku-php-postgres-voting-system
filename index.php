@@ -12,22 +12,32 @@ var_dump($yesVotesLine);
 $noVotesLine = pg_fetch_array($result, null, PGSQL_ASSOC);
 $noVotes = (int) $noVotesLine['votes'];*/
 
+$lastKey = '';
 while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
     foreach ($line as $key => $col_value) {
-        var_dump($col_value);
-        var_dump($key);
+		if($lastKey == "no") {
+			$noVotes = (int) $col_value;
+		}
+		if($lastKey == "yes") {
+			$yesVotes = (int) $col_value;
+		}
+		$lastKey = $col_value;
     }
 }
 
-
-/*if(isset($_POST['vote'])) {
+if(isset($_POST['vote'])) {
+if($_POST['vote'] == "yes") {
 $newYesVotes = $yesVotes + 1;
-$query = 'UPDATE votes SET votes = '.$yesVotes .' WHERE name = \'yes\'';
-var_dump($query);
+$query = 'UPDATE votes SET votes = '.$newYesVotes .' WHERE name = \'yes\'';
 $result = pg_query($query) or die('Query failed: ' . pg_last_error());
-
 }
-*/
+var_dump($_POST['vote']);
+if($_POST['vote'] == "no") {
+$newNoVotes = $noVotes + 1;
+$query = 'UPDATE votes SET votes = '.$newNoVotes .' WHERE name = \'no\'';
+$result = pg_query($query) or die('Query failed: ' . pg_last_error());
+}
+}
 
 
 // Free resultset
@@ -39,7 +49,7 @@ pg_close($dbconn);
 
 <form name="input" action="index.php" method="post">
 <input type="hidden" name="vote" value="yes">
-<input type="submit" name="vote" value="YES">
+<input type="submit"  value="YES">
 </form>
 <b>YES votes: <?php echo $yesVotes?></b>
 
