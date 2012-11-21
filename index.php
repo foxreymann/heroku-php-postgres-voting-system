@@ -31,7 +31,6 @@ $newYesVotes = $yesVotes + 1;
 $query = 'UPDATE votes SET votes = '.$newYesVotes .' WHERE name = \'yes\'';
 $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 }
-var_dump($_POST['vote']);
 if($_POST['vote'] == "no") {
 $newNoVotes = $noVotes + 1;
 $query = 'UPDATE votes SET votes = '.$newNoVotes .' WHERE name = \'no\'';
